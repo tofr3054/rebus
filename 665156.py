@@ -11,14 +11,13 @@ def addUser(n):
     return users
 
 def login():
-    i = input("Skriv in ditt användarnamn: ")
+    i = input("Type your username: ")
     userlist = list(users.values())
-    print(userlist)
     if i in userlist[0]:
-        print(f'Välkommen {i}')
+        print(f'Welcome {i}')
     else:
         addUser(i)
-        print(f'Välkommen ny spelare {i}')
+        print(f'Welcome new player {i}')
     return f'user{len(users.keys())}'
 
 def addPoints(user, p):
@@ -33,48 +32,49 @@ def rebus(r, u):
     while True:
         print(questionsAndRebuses[r][0])
         print()
-        svar = input("Svar: ")
+        svar = input("Answer: ")
         print()
         if svar == (questionsAndRebuses[r][1]):
-            print("Du klarade den")
-            print(f"+10 poäng! Din nya poäng är: {addPoints(u, 10)}")
+            print("Congratulations, you did it!")
+            print(f"+10 points! Your new score is: {addPoints(u, 10)}")
+            print()
             return users[u][1]
 
         else:
             print()
-            print("Fel svar, försök igen!")
-            print(f"-1 poäng för fel svar! Din nya poäng är: {subPoints(u, 1)}")
+            print("Wrong answer, try again!")
+            print(f"-1 points for wrong answer! Your new score is: {subPoints(u, 1)}")
             print()
             clue(r, u)
             
     
 def clue(r, user):
     while True:
-        c = input("Vill du ha en ledtråd? ja/nej: ")
+        c = input("Do you want a clue? yes/no: ")
         print()
-        if c == "ja":
+        if c == "yes":
             print()
             while True:
-                s = input("Lätt, mellan eller svår? ")
-                if s == "lätt":
-                    print(f"Ledtråd: {questionsAndRebuses[r][2]}")
-                    print(f"Det kostade 5 poäng! Din nya poäng är: {subPoints(user, 5)}")
+                s = input("Easy, medium or hard? ")
+                if s == "easy":
+                    print(f"Clue: {questionsAndRebuses[r][2]}")
+                    print(f"It cost you 5 points! Your new score is: {subPoints(user, 5)}")
                     print()
                     break
-                if s == "mellan":
-                    print(f"Ledtråd: {questionsAndRebuses[r][3]}")
-                    print(f"Det kostade 4 poäng! Din nya poäng är: {subPoints(user, 4)}")
+                if s == "medium":
+                    print(f"Clue: {questionsAndRebuses[r][3]}")
+                    print(f"It cost you 4 points! Your new score is: {subPoints(user, 4)}")
                     print()
                     break
-                if s == "svår":
+                if s == "hard":
                     print(f"Ledtråd: {questionsAndRebuses[r][4]}")
-                    print(f"Det kostade 3 poäng! Din nya poäng är: {subPoints(user, 3)}")
+                    print(f"It cost you 3 points! Your new score is: {subPoints(user, 3)}")
                     print()
                     break
-                elif s == "nej":
+                elif s == "no":
                     break
             break
-        elif c == "nej":
+        elif c == "no":
             break
 
 
@@ -83,26 +83,34 @@ cont = {'a':'Yes', 'b':'No'}
 
 def continueAfterLeaderboard(title, prompt, choices):
     print(title)
+    print()
     for x in choices:
         print(f'  {x}) {choices[x]}')
+    print()
     while True:
         i = input(prompt)
         if i == 'b' or i == 'a':
             return i
 
+        
 def leaderboard():
     usernamesandpoints = dict((users.values()))
-    toppoints = sorted(usernamesandpoints.values(), reverse = True)  
-    print("Topplista")
+    toppoints = sorted(usernamesandpoints.values(), reverse = True)
+    print("Leaderboard")
     n = 1
-    for x in toppoints:
+    toppoints2 = [i for n, i in enumerate(toppoints) if i not in toppoints[:n]]
+    for x in toppoints2:
         username = [user for user, points in usernamesandpoints.items() if points == x]
-        print (f" {n}) {username}: {x}")
-        n = n + 1
-        
+        if len(username) == 1:
+            print (f" {n}) {username[0]}: {x}")
+
+        else:
+           g = " and ".join([", ".join(username[:-1]),username[-1]] if len(username) > 2 else username)
+           print(f" {n}) {g}: {x}")
+        n += 1
         
 
-choice = {'A':'New player', 'B':'Show leaderboard', 'C':'Terminate game'}
+choice = {'a':'New player', 'b':'Show leaderboard', 'c':'Terminate game'}
 
 def menu(title, prompt, options):
     print(title)
@@ -112,20 +120,24 @@ def menu(title, prompt, options):
     print()
     while True:
         x = input(prompt)
-        if x  == 'C':
+        if x  == 'c':
             print('Goodbye!')
             break
-        elif x == 'B':
+        elif x == 'b':
             leaderboard()
-            c = continueAfterLeaderboard('Want to play?', 'Answer: ' cont)
+            print()
+            c = continueAfterLeaderboard('Want to play?', 'Answer: ', cont)
             if c == 'b':
+                print()
                 print('Goodbye!')
                 break
             elif c == 'a':
+                print()
                 print('New player')
                 main()
             break
-        elif x == 'A':
+        elif x == 'a':
+            print()
             print('New player')
             main()
 
