@@ -81,16 +81,14 @@ def clue(r, user):
 
 cont = {'a':'Yes', 'b':'No'}
 
-def continueAfterLeaderboard(prompt, choices):
-    print(prompt)
+def continueAfterLeaderboard(title, prompt, choices):
+    print(title)
     for x in choices:
         print(f'  {x}) {choices[x]}')
     while True:
-        i = input()
-        if i == 'b':
-            break
-        elif i == 'a':
-            main()
+        i = input(prompt)
+        if i == 'b' or i == 'a':
+            return i
 
 def leaderboard():
     usernamesandpoints = dict((users.values()))
@@ -115,12 +113,17 @@ def menu(title, prompt, options):
     while True:
         x = input(prompt)
         if x  == 'C':
-            print("Goodbye!")
+            print('Goodbye!')
             break
         elif x == 'B':
             leaderboard()
-            if continueAfterLeaderboard('Want to play?', cont) == 'b':
+            c = continueAfterLeaderboard('Want to play?', 'Answer: ' cont)
+            if c == 'b':
+                print('Goodbye!')
                 break
+            elif c == 'a':
+                print('New player')
+                main()
             break
         elif x == 'A':
             print('New player')
